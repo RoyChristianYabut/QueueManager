@@ -48,8 +48,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
         qs = new QueueSession(getApplicationContext());
 
         qname = (TextView) findViewById(R.id.queueName);
-        String queuename = qs.getdoctorfirstname() + " " + qs.getdoctorlastname();
-        qname.setText(queuename);
+        qname.setText(qs.getqueuename());
 
         beginbutton = (Button) findViewById(R.id.beginQueue);
         endbutton = (Button) findViewById(R.id.endQueue);
@@ -63,7 +62,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 beginqueue.execute();
             }
         });
-        Toast.makeText(getBaseContext(), "" + qs.getqueueid(), Toast.LENGTH_LONG).show();
+
         try{
             PatientList pl = new PatientList(Queue.this, listView, qs.getqueueid());
             pl.execute();
@@ -102,21 +101,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
                     z = "Please check your internet connection";
                 } else {
 
-                    String query = SELECT_QUEUE;
-
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ps.setString(1, qs.getdoctorid());
-                    ps.setString(2, qs.getdepartmentid());
-
-
-                    ResultSet rs = ps.executeQuery();
-
-                    while (rs.next()) {
-                        qs.setqueueid(rs.getString(1));
-                        isSuccess = true;
-                        Log.d("From session Queue", qs.getqueueid());
-                    }
-                    if (!isSuccess) {
+                    if(qs.getqueueid()==null||qs.getqueueid().isEmpty()){
                         String query2 = INSERT_INTO_QUEUE;
                         String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
                         String mCurrentTime = DateUtility.getDateTimeFromTimeStamp(System.currentTimeMillis(), DATE_FORMAT);
@@ -140,9 +125,14 @@ public class Queue extends AppCompatActivity implements DBUtility {
                                 qs.setqueueid(rs1.getString(1));
                                 isSuccess = true;
                                 Log.d("Insert Queue", qs.getqueueid());
+                                z= "Opening queue...";
                             }
                         }
-
+                    }
+                    else{
+                        isSuccess = true;
+                        Log.d("From session Queue", qs.getqueueid());
+                        z= "Queue already active, opening active queue...";
                     }
 
 

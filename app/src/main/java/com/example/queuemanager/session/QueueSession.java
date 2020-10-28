@@ -66,4 +66,13 @@ public class QueueSession {
         String queueid = prefs.getString("queueid","");
         return queueid;
     }
+
+    public void setqueuename(String queuename) {
+        prefs.edit().putString("queuename", queuename).commit();
+    }
+
+    public String getqueuename() {
+        String queuename = prefs.getString("queuename","");
+        return queuename;
+    }
 }

@@ -19,6 +19,8 @@ public interface DBUtility {
     String SELECT_DOCTOR_LIST="SELECT * from doctor WHERE Status='Active' and clinic_id=? "; //WHERE DEPARTMENT ID IS ALSO INCLUDED; NOT YET COMPLETE
     String SELECT_PATIENT_LIST="SELECT i.instance_id, i.patient_id, i.queuetype, i.timestamp, i.status, i.priority, i.queuenumber from instance i inner join queuelist ql on ql.instance_id=i.instance_id where ql.queue_id = ?";
     String SELECT_QUEUE="SELECT Queue_ID from queue WHERE Doctor_ID=? and Department_ID=? and Status='Active'";
+    String SELECT_ACTIVE_QUEUE="SELECT queue.Queue_ID, queue.QueueName from queue INNER JOIN queueconnector ON queueconnector.Queue_ID = queue.Queue_ID WHERE queueconnector.QueueManager_ID=? and queue.Status='Active'";
+    String SELECT_ACTIVE_QUEUE_NUMBER="SELECT COUNT(Queue_ID) from queuelist WHERE Status='Active' and Queue_ID=?";
 
     String GET_NEW_QUEUE_ID="SELECT MAX(queue_id) from queue";
 

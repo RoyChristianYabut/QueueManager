@@ -39,7 +39,7 @@ public class DoctorSelect extends AppCompatActivity {
 
         session = new KeruxSession(getApplicationContext());
         qs=new QueueSession(getApplicationContext());
-
+        qs.setqueueid(null);
         depname = (TextView)findViewById(R.id.txtView_departmentName);
         depname.setText(qs.getdepartmentname());
 
@@ -50,11 +50,16 @@ public class DoctorSelect extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                Intent intentG = getIntent();
                 Intent intent = new Intent(DoctorSelect.this, Queue.class);
+                Bundle extras=intentG.getExtras();
                 Doctor item = (Doctor)listView.getAdapter().getItem(position);
+                extras.putString("DocID", Integer.toString(item.getDoctorid()) );
                 qs.setdoctorid(Integer.toString(item.getDoctorid()));
                 qs.setdoctorfirstname(item.getDoctorfirstname());
                 qs.setdoctorlastname(item.getDoctorlastname());
+                qs.setqueuename(item.getDoctorfirstname()+" "+item.getDoctorlastname());
+                intent.putExtras(extras);
                 startActivity(intent);
                 finish();
             }
