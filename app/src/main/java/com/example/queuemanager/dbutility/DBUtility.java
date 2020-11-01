@@ -26,4 +26,8 @@ public interface DBUtility {
 
     String INSERT_INTO_QUEUE="INSERT INTO queue (QueueName, TimeStamp, Doctor_ID, Department_ID, Status) values (?, ?, ?, ?, 'Active')";
 
+    String UPDATE_MARK_PATIENT_AS_SERVED="UPDATE instance set status = 'Served' where instance_id= ?";
+    String UPDATE_MARK_PATIENT_AS_NO_SHOW="UPDATE instance set status = 'No Show' where instance_id= ?";
+    String UPDATE_QUEUELIST_AS_SERVED="UPDATE queuelist set status = 'Served' where instance_id= ? and queue_id=?";
+    String UPDATE_QUEUELIST_AS_NO_SHOW="UPDATE queuelist set status = 'No Show' where instance_id= ? and queue_id=?";
 }

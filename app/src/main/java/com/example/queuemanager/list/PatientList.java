@@ -30,12 +30,22 @@ public class PatientList extends AsyncTask<Void,Void,String> implements DBUtilit
     QueueAdapter queueAdapter;
     ConnectionClass connectionClass;
 
-    public PatientList(Context c, ListView lv, String queueid) {
+    public PatientList(Context c, ListView lv, String queueid, QueueAdapter queueAdapter) {
         this.c = c;
         this.lv = lv;
         this.connectionClass = new ConnectionClass();
         this.queueid=queueid;
+        this.queueAdapter=queueAdapter;
         this.patientsList  = new ArrayList<>();
+
+    }
+    public QueueAdapter getQueueAdapter(){
+        return queueAdapter;
+    }
+    public ArrayList<Patient> getPatientsList(){
+        this.patientsList  = new ArrayList<>();
+        this.retrieveData();
+        return patientsList;
     }
 
     @Override
@@ -64,7 +74,6 @@ public class PatientList extends AsyncTask<Void,Void,String> implements DBUtilit
         if(s != null)
         {
             queueAdapter = new QueueAdapter(c, patientsList);
-            queueAdapter.updateAdapter(patientsList);
             lv.setAdapter(queueAdapter);
 
         }else {

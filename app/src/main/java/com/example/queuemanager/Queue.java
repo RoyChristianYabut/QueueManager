@@ -6,33 +6,48 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.queuemanager.adapter.QueueAdapter;
 import com.example.queuemanager.dateutility.DateUtility;
 import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.list.PatientList;
+import com.example.queuemanager.model.ActiveQueue;
+import com.example.queuemanager.model.Department;
 import com.example.queuemanager.model.Doctor;
+import com.example.queuemanager.model.Patient;
 import com.example.queuemanager.security.Security;
 import com.example.queuemanager.session.QueueSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class Queue extends AppCompatActivity implements DBUtility {
 
     private TextView qname;
     private QueueSession qs;
+    private TextToSpeech t1;
 
     private Button beginbutton;
     private Button endbutton;
     private Button callnextpatient;
+    private Button refresh;
     private ListView listView;
+
+
+    private QueueAdapter queueAdapter;
+    private int queueid;
 
     ProgressDialog progressDialog; //
     ConnectionClass connectionClass; //
@@ -54,6 +69,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
         endbutton = (Button) findViewById(R.id.endQueue);
         callnextpatient = (Button) findViewById(R.id.callNextPatient);
         listView =(ListView) findViewById(R.id.patientList);
+        refresh = (Button) findViewById(R.id.btnRefresh);
 
         beginbutton.setOnClickListener(new View.OnClickListener() {//
             @Override
@@ -62,16 +78,97 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 beginqueue.execute();
             }
         });
+       queueid=0;
 
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.US);
+                }
+            }
+        });
+
+
+
+
+//      boolean successPatientList=false;
         try{
-            PatientList pl = new PatientList(Queue.this, listView, qs.getqueueid());
+            PatientList pl = new PatientList(Queue.this, listView, qs.getqueueid(), queueAdapter);
             pl.execute();
-
+            queueid=Integer.parseInt(qs.getqueueid());
+//          successPatientList=true;
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                    Intent intent = new Intent(Queue.this, ManageQueue.class);
+                    Patient item = (Patient) listView.getAdapter().getItem(position);
+                    Log.d("EEN", "WENT HERE");
+                    Toast.makeText(getBaseContext(), "1: "+queueid+" 2: "+item.getQueueNumber()+" 3: "+item.getInstanceid(), Toast.LENGTH_LONG).show();
+                    intent.putExtra("queueid", Integer.toString(queueid));
+                    intent.putExtra("queuenumber", item.getQueueNumber());
+                    intent.putExtra("instanceid", item.getInstanceid());
+                    startActivity(intent);
+                }
+            });
         }
         catch(Exception e){
             e.printStackTrace();
         }
+//          FOR REFRESHING PERIODCIALLY
+//        if(successPatientList){
+//            final Handler handler = new Handler();
+//            handler.postDelayed( new Runnable() {
+//
+//                @Override
+//                public void run() {
+////                    queueAdapter.updateAdapter(queueid);
+////                    listView.setAdapter(queueAdapter);
+//                    PatientList pl = new PatientList(Queue.this, listView, qs.getqueueid(), queueAdapter);
+//                    pl.execute();
+//                    Toast.makeText(getBaseContext(), "" + queueid, Toast.LENGTH_LONG).show();
+////                adapter.notifyDataSetChanged();
+//                    handler.postDelayed( this, 5000 );
+//                }
+//            }, 5000 );
+//        }
 
+        callnextpatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = "";
+
+                try {
+                    for (int i = 0; i < listView.getCount(); i++) {
+                        v = listView.getChildAt(i);
+                        TextView status=(TextView) v.findViewById(R.id.patientStatus);
+                        TextView patientNumber=(TextView) v.findViewById(R.id.patientNumber);
+                        if (status.getText().toString().equals("Active")){
+                            toSpeak=patientNumber.getText().toString();
+                            break;
+                        }
+                    }
+                    if(toSpeak.equals("")){
+
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+                        t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        refresh.setOnClickListener(new View.OnClickListener() {//
+            @Override
+            public void onClick(View v) {
+                PatientList pl = new PatientList(Queue.this, listView, qs.getqueueid(), queueAdapter);
+                pl.execute();
+            }
+        });
     }
 
 

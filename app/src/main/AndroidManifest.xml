@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DepartmentSelect"></activity>
+        <activity android:name=".GenerateReport"></activity>
+        <activity android:name=".ManageQueue" />
+        <activity android:name=".DepartmentSelect" />
         <activity android:name=".Queue" />
         <activity android:name=".DoctorSelect" />
         <activity android:name=".Dashboard" />
