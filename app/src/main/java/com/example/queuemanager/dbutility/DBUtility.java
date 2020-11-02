@@ -21,6 +21,10 @@ public interface DBUtility {
     String SELECT_QUEUE="SELECT Queue_ID from queue WHERE Doctor_ID=? and Department_ID=? and Status='Active'";
     String SELECT_ACTIVE_QUEUE="SELECT queue.Queue_ID, queue.QueueName from queue INNER JOIN queueconnector ON queueconnector.Queue_ID = queue.Queue_ID WHERE queueconnector.QueueManager_ID=? and queue.Status='Active'";
     String SELECT_ACTIVE_QUEUE_NUMBER="SELECT COUNT(Queue_ID) from queuelist WHERE Status='Active' and Queue_ID=?";
+    String SELECT_REPORT_QUEUE_NUMBER="SELECT COUNT(Queue_ID) from queuelist WHERE Queue_ID=?";
+    String SELECT_REPORT_QUEUE_LIST="SELECT i.queuenumber, i.status from instance i inner join queuelist ql on ql.instance_id=i.instance_id where ql.queue_id = ?";
+    String SELECT_REPORT_QUEUE_CANCELLED="SELECT COUNT(i.queuenumber) from instance i inner join queuelist ql on ql.instance_id=i.instance_id where ql.queue_id = ? and ql.status='Cancelled'";
+    String SELECT_REPORT_QUEUE_SERVED="SELECT COUNT(i.queuenumber) from instance i inner join queuelist ql on ql.instance_id=i.instance_id where ql.queue_id = ? and ql.status='Served'";
 
     String GET_NEW_QUEUE_ID="SELECT MAX(queue_id) from queue";
 

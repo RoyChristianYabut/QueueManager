@@ -46,7 +46,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
         btnMarkServed=(Button)findViewById(R.id.btnMarkPatientServed);
         btnMarkNoShow=(Button)findViewById(R.id.btnMarkPatientNoShow);
 
-        progressDialog=new ProgressDialog(this);//
+        progressDialog=new ProgressDialog(this);
         qs = new QueueSession(getApplicationContext());
 
         Intent i= getIntent();
