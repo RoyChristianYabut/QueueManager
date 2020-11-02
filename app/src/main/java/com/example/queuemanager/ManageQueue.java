@@ -69,8 +69,9 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
         btnCallAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MarkCalled markCalled =new MarkCalled();
+                markCalled.execute();
                 String toSpeak = txtPatient.getText().toString();
-                Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
                 t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
@@ -90,8 +91,6 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
                 markNoShow.execute();
             }
         });
-
-        Toast.makeText(getApplicationContext(), instanceid+" "+queuenumber+" "+queueid,Toast.LENGTH_SHORT).show();
     }
 
     private class MarkServed extends AsyncTask<String,String,String> {
@@ -234,6 +233,65 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
 
 
 
+
+        }
+    }
+
+    private class MarkCalled extends AsyncTask<String,String,String> {
+        boolean isSuccess;
+        String z="";
+        @Override
+        protected void onPreExecute() {
+
+
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            z="";
+
+            try {
+                Connection con = connectionClass.CONN();
+                Security sec =new Security();
+                if (con == null) {
+                    z = "Please check your internet connection";
+                } else {
+
+                    String query = UPDATE_MARK_PATIENT_AS_CALLED;
+
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ps.setInt(1, instanceid);
+
+                    String query2= UPDATE_QUEUELIST_AS_CALLED;
+                    PreparedStatement ps2=con.prepareStatement(query2);
+                    ps2.setInt(1, instanceid);
+                    ps2.setString(2, queueid);
+                    // stmt.executeUpdate(query);
+                    isSuccess =true;
+
+                    ps.executeUpdate();
+                    ps2.executeUpdate();
+                    z="Patient Served";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccess = false;
+                z = "Exceptions"+ex;
+            }
+            return z;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(getBaseContext(),""+z,Toast.LENGTH_LONG).show();
+
+            progressDialog.dismiss();
 
         }
     }

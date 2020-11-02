@@ -17,7 +17,7 @@ public interface DBUtility {
 
     String SELECT_DEPARTMENT_LIST="SELECT Department_ID, Name from department WHERE Status='Active' and clinic_id=? ";
     String SELECT_DOCTOR_LIST="SELECT * from doctor WHERE Status='Active' and clinic_id=? "; //WHERE DEPARTMENT ID IS ALSO INCLUDED; NOT YET COMPLETE
-    String SELECT_PATIENT_LIST="SELECT i.instance_id, i.patient_id, i.queuetype, i.timestamp, i.status, i.priority, i.queuenumber from instance i inner join queuelist ql on ql.instance_id=i.instance_id where ql.queue_id = ?";
+    String SELECT_PATIENT_LIST="SELECT i.instance_id, i.patient_id, i.queuetype, i.timestamp, i.status, i.priority, i.queuenumber from instance i inner join queuelist ql on ql.instance_id=i.instance_id where ql.queue_id = ? AND ql.status!='Served'";
     String SELECT_QUEUE="SELECT Queue_ID from queue WHERE Doctor_ID=? and Department_ID=? and Status='Active'";
     String SELECT_ACTIVE_QUEUE="SELECT queue.Queue_ID, queue.QueueName from queue INNER JOIN queueconnector ON queueconnector.Queue_ID = queue.Queue_ID WHERE queueconnector.QueueManager_ID=? and queue.Status='Active'";
     String SELECT_ACTIVE_QUEUE_NUMBER="SELECT COUNT(Queue_ID) from queuelist WHERE Status='Active' and Queue_ID=?";
@@ -27,7 +27,11 @@ public interface DBUtility {
     String INSERT_INTO_QUEUE="INSERT INTO queue (QueueName, TimeStamp, Doctor_ID, Department_ID, Status) values (?, ?, ?, ?, 'Active')";
 
     String UPDATE_MARK_PATIENT_AS_SERVED="UPDATE instance set status = 'Served' where instance_id= ?";
-    String UPDATE_MARK_PATIENT_AS_NO_SHOW="UPDATE instance set status = 'No Show' where instance_id= ?";
+    String UPDATE_MARK_PATIENT_AS_NO_SHOW="UPDATE instance set status = 'Cancelled' where instance_id= ?";
     String UPDATE_QUEUELIST_AS_SERVED="UPDATE queuelist set status = 'Served' where instance_id= ? and queue_id=?";
-    String UPDATE_QUEUELIST_AS_NO_SHOW="UPDATE queuelist set status = 'No Show' where instance_id= ? and queue_id=?";
+    String UPDATE_QUEUELIST_AS_NO_SHOW="UPDATE queuelist set status = 'Cancelled' where instance_id= ? and queue_id=?";
+    String UPDATE_MARK_PATIENT_AS_CALLED="UPDATE instance set status = 'Called' where instance_id= ?";
+    String UPDATE_QUEUELIST_AS_CALLED="UPDATE queuelist set status = 'Called' where instance_id= ? and queue_id=?";
+
+
 }

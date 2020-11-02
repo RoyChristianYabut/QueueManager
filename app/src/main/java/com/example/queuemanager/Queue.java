@@ -52,6 +52,9 @@ public class Queue extends AppCompatActivity implements DBUtility {
     ProgressDialog progressDialog; //
     ConnectionClass connectionClass; //
 
+    private int instanceidCall;
+    private String queueidCall;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,14 +148,22 @@ public class Queue extends AppCompatActivity implements DBUtility {
                         TextView patientNumber=(TextView) v.findViewById(R.id.patientNumber);
                         if (status.getText().toString().equals("Active")){
                             toSpeak=patientNumber.getText().toString();
+                            Patient item = (Patient) listView.getAdapter().getItem(i);
+                            instanceidCall=item.getInstanceid();
+                            queueidCall=qs.getqueueid();
                             break;
                         }
+
+
+//
                     }
                     if(toSpeak.equals("")){
 
                     }
                     else{
-                        Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+                        MarkCalled markCalled=new MarkCalled();
+                        markCalled.execute();
+//                        Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
                         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }catch(Exception e){
@@ -162,6 +173,14 @@ public class Queue extends AppCompatActivity implements DBUtility {
             }
         });
 
+        endbutton.setOnClickListener(new View.OnClickListener() {//
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Queue.this,GenerateReport.class);
+                intent.putExtra("queueid", qs.getqueueid());
+                startActivity(intent);
+            }
+        });
         refresh.setOnClickListener(new View.OnClickListener() {//
             @Override
             public void onClick(View v) {
@@ -258,6 +277,64 @@ public class Queue extends AppCompatActivity implements DBUtility {
             }
 
 
+        }
+    }
+
+    private class MarkCalled extends AsyncTask<String,String,String> {
+        boolean isSuccess;
+        String z="";
+        @Override
+        protected void onPreExecute() {
+
+
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            z="";
+
+            try {
+                Connection con = connectionClass.CONN();
+                Security sec =new Security();
+                if (con == null) {
+                    z = "Please check your internet connection";
+                } else {
+
+                    String query = UPDATE_MARK_PATIENT_AS_CALLED;
+
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ps.setInt(1, instanceidCall);
+
+                    String query2= UPDATE_QUEUELIST_AS_CALLED;
+                    PreparedStatement ps2=con.prepareStatement(query2);
+                    ps2.setInt(1, instanceidCall);
+                    ps2.setString(2, queueidCall);
+                    // stmt.executeUpdate(query);
+                    isSuccess =true;
+
+                    ps.executeUpdate();
+                    ps2.executeUpdate();
+                    z="Patient Served";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccess = false;
+                z = "Exceptions"+ex;
+            }
+            return z;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(getBaseContext(),""+z,Toast.LENGTH_LONG).show();
+
+            progressDialog.dismiss();
         }
     }
 }
