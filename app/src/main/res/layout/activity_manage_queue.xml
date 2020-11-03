@@ -8,49 +8,60 @@
 
     <TextView
         android:id="@+id/txtPatient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="397dp"
+        android:layout_height="57dp"
+        android:fontFamily="@font/anton"
         android:text="TextView"
+        android:textColor="@color/colorPrimaryBlack"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.212"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.123" />
+        app:layout_constraintVertical_bias="0.119" />
 
     <Button
         android:id="@+id/btnCallAgain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Call Patient Again"
+        android:layout_width="344dp"
+        android:layout_height="68dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.449"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.831" />
+        app:layout_constraintVertical_bias="0.983" />
 
     <Button
         android:id="@+id/btnMarkPatientServed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mark Patient as Served"
+        android:layout_width="338dp"
+        android:layout_height="61dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.415"
+        app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.648" />
+        app:layout_constraintVertical_bias="0.797" />
 
     <Button
         android:id="@+id/btnMarkPatientNoShow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mark Patient as No Show"
+        android:layout_width="336dp"
+        android:layout_height="58dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.415"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.733" />
+        app:layout_constraintVertical_bias="0.885" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/selectedpatient" />
 </androidx.constraintlayout.widget.ConstraintLayout>
