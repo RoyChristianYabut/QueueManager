@@ -6,15 +6,17 @@ import android.preference.PreferenceManager;
 
 public class KeruxSession {
 
+    SharedPreferences.Editor editor;
     private SharedPreferences prefs;
 
     public KeruxSession(Context cntx) {
         // TODO Auto-generated constructor stub
         prefs = PreferenceManager.getDefaultSharedPreferences(cntx);
+        editor = prefs.edit();
     }
 
     public void setinstanceid(String instanceid) {
-        prefs.edit().putString("instanceid", instanceid).commit();
+        editor.putString("instanceid", instanceid).commit();
     }
 
     public String getinstanceid() {
@@ -23,7 +25,7 @@ public class KeruxSession {
     }
 
     public void setemail(String email) {
-        prefs.edit().putString("email", email).commit();
+        editor.putString("email", email).commit();
     }
 
     public String getemail() {
@@ -33,7 +35,7 @@ public class KeruxSession {
 
 
     public void setpassword(String password) {
-        prefs.edit().putString("password", password).commit();
+        editor.putString("password", password).commit();
     }
 
     public String getpassword() {
@@ -41,7 +43,7 @@ public class KeruxSession {
         return password;
     }
     public void setqueuemanagerid(String queuemanagerid) {
-        prefs.edit().putString("queuemanagerid", queuemanagerid).commit();
+        editor.putString("queuemanagerid", queuemanagerid).commit();
     }
 
     public String getqueuemanagerid() {
@@ -50,7 +52,7 @@ public class KeruxSession {
     }
 
     public void setclinicid(String clinicid) {
-        prefs.edit().putString("clinicid", clinicid).commit();
+        editor.putString("clinicid", clinicid).commit();
     }
 
     public String getclinicid() {
@@ -59,7 +61,7 @@ public class KeruxSession {
     }
 
     public void setusername(String username) {
-        prefs.edit().putString("username", username).commit();
+        editor.putString("username", username).commit();
     }
 
     public String getusername() {
@@ -68,7 +70,7 @@ public class KeruxSession {
     }
 
     public void setfirstname(String firstname) {
-        prefs.edit().putString("firstname", firstname).commit();
+        editor.putString("firstname", firstname).commit();
     }
 
     public String getfirstname() {
@@ -77,12 +79,18 @@ public class KeruxSession {
     }
 
     public void setlastname(String lastname) {
-        prefs.edit().putString("lastname", lastname).commit();
+        editor.putString("lastname", lastname).commit();
     }
 
     public String getlastname() {
         String lastname = prefs.getString("lastname","");
         return lastname;
     }
+
+    public void destroySession() {
+        editor.clear();
+        editor.commit();
+    }
+
 }
 

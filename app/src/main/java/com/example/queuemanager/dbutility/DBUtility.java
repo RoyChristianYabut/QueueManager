@@ -11,7 +11,6 @@ public interface DBUtility {
     String dbUserName = "KeruxAdmin";
     String dbPassword = "admin";
 
-    String SELECT_LIST_PATIENT ="SELECT * from department ";
     String LOGIN_CRED="select queuemanager_id, clinic_id, username, firstname, lastname, email from queuemanager where username=? and password =?";
 
 
@@ -36,6 +35,7 @@ public interface DBUtility {
     String UPDATE_QUEUELIST_AS_NO_SHOW="UPDATE queuelist set status = 'Cancelled' where instance_id= ? and queue_id=?";
     String UPDATE_MARK_PATIENT_AS_CALLED="UPDATE instance set status = 'Called' where instance_id= ?";
     String UPDATE_QUEUELIST_AS_CALLED="UPDATE queuelist set status = 'Called' where instance_id= ? and queue_id=?";
+    String UPDATE_QUEUE_ENDQUEUE="UPDATE queue set EndTime = CURRENT_TIMESTAMP, Status='Closed' where queue_id=?";
 
 
 }

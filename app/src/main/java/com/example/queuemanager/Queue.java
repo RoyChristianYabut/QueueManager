@@ -106,7 +106,6 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                     Intent intent = new Intent(Queue.this, ManageQueue.class);
                     Patient item = (Patient) listView.getAdapter().getItem(position);
-                    Log.d("EEN", "WENT HERE");
                     Toast.makeText(getBaseContext(), "1: "+queueid+" 2: "+item.getQueueNumber()+" 3: "+item.getInstanceid(), Toast.LENGTH_LONG).show();
                     intent.putExtra("queueid", Integer.toString(queueid));
                     intent.putExtra("queuenumber", item.getQueueNumber());
@@ -163,7 +162,6 @@ public class Queue extends AppCompatActivity implements DBUtility {
                     else{
                         MarkCalled markCalled=new MarkCalled();
                         markCalled.execute();
-//                        Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
                         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }catch(Exception e){
@@ -176,9 +174,8 @@ public class Queue extends AppCompatActivity implements DBUtility {
         endbutton.setOnClickListener(new View.OnClickListener() {//
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Queue.this,GenerateReport.class);
-                intent.putExtra("queueid", qs.getqueueid());
-                startActivity(intent);
+                EndQueue endQueue=new EndQueue();
+                endQueue.execute();
             }
         });
         refresh.setOnClickListener(new View.OnClickListener() {//
@@ -212,7 +209,6 @@ public class Queue extends AppCompatActivity implements DBUtility {
         protected String doInBackground(String... params) {
             try {
                 Connection con = connectionClass.CONN();
-                Security sec = new Security();
                 if (con == null) {
                     z = "Please check your internet connection";
                 } else {
@@ -273,6 +269,69 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
 
                 Intent intent = new Intent(Queue.this, Queue.class);
+                startActivity(intent);
+            }
+
+
+        }
+    }
+
+    private class EndQueue extends AsyncTask<String, String, String> {
+
+        String z = "";
+        boolean isSuccess = false;
+
+
+        @Override
+        protected void onPreExecute() {
+
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Please check your internet connection";
+                } else {
+
+
+                    String query = UPDATE_QUEUE_ENDQUEUE;
+
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ps.setString(1, qs.getqueueid());
+
+                    int i = ps.executeUpdate();
+                    isSuccess = true;
+
+
+
+                }
+            } catch (Exception ex) {
+                isSuccess = false;
+                z = "Exceptions" + ex;
+            }
+            return z;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (z.equals("")) {
+
+            } else {
+                Toast.makeText(getBaseContext(), "" + z, Toast.LENGTH_LONG).show();
+            }
+
+            progressDialog.dismiss();
+            if (isSuccess) {
+
+
+                Intent intent = new Intent(Queue.this,GenerateReport.class);
+                intent.putExtra("queueid", qs.getqueueid());
                 startActivity(intent);
             }
 

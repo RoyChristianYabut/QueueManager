@@ -85,7 +85,7 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
                     z = "Please check your internet connection";
                 } else {
                     createPdf();
-                    viewPdf();
+                    emailNote();
 
                     z="Report Generated";
                 }
@@ -192,7 +192,6 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
         String error="";
         try {
             Connection con = connectionClass.CONN();
-            Security sec =new Security();
             if (con == null) {
                 error="Please check your internet connection";
             } else {
