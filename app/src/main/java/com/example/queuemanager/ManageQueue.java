@@ -1,7 +1,5 @@
 package com.example.queuemanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,13 +10,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.security.Security;
 import com.example.queuemanager.session.QueueSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Locale;
 
 public class ManageQueue extends AppCompatActivity implements DBUtility {
@@ -35,11 +35,14 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
     private String queuenumber;
     private QueueSession qs;
 
+    DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_queue);
         connectionClass =new ConnectionClass();
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         txtPatient =(TextView)findViewById(R.id.txtPatient);
         btnCallAgain=(Button)findViewById(R.id.btnCallAgain);
@@ -91,6 +94,42 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
                 markNoShow.execute();
             }
         });
+    }
+
+    public void ClickMenu (View view){
+        //open drawer
+        Dashboard.openDrawer(drawerLayout);
+    }
+
+    public void ClickLogo (View view){
+        //Close drawer
+        Dashboard.closeDrawer(drawerLayout);
+    }
+
+    public void ClickEditProfile(View view){
+        //Redirect activity to dashboard
+        Dashboard.redirectActivity(this, EditProfile.class);
+    }
+
+    public void ClickDashboard(View view){
+        //Redirect activity to dashboard
+        Dashboard.redirectActivity(this, Dashboard.class);
+    }
+
+    public void ClickCurrentQueue(View view){
+        //Redirect activity to manage accounts
+        Dashboard.redirectActivity(this, Queue.class);
+    }
+
+    public void ClickLogout(View view){
+        Dashboard.logout(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //close drawer
+        Dashboard.closeDrawer(drawerLayout);
     }
 
     private class MarkServed extends AsyncTask<String,String,String> {

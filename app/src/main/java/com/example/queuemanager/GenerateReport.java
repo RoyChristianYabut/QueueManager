@@ -1,8 +1,5 @@
 package com.example.queuemanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,8 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.example.queuemanager.dbutility.DBUtility;
-import com.example.queuemanager.model.Patient;
 import com.example.queuemanager.security.Security;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -41,10 +41,14 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
     File myFile;
     ProgressDialog progressDialog;
     ConnectionClass connectionClass;
+
+    DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_report);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         progressDialog=new ProgressDialog(this);
         connectionClass =new ConnectionClass();
@@ -61,6 +65,42 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
             }
         });
 
+    }
+
+    public void ClickMenu (View view){
+        //open drawer
+        Dashboard.openDrawer(drawerLayout);
+    }
+
+    public void ClickLogo (View view){
+        //Close drawer
+        Dashboard.closeDrawer(drawerLayout);
+    }
+
+    public void ClickEditProfile(View view){
+        //Redirect activity to dashboard
+        Dashboard.redirectActivity(this, EditProfile.class);
+    }
+
+    public void ClickDashboard(View view){
+        //Redirect activity to dashboard
+        Dashboard.redirectActivity(this, Dashboard.class);
+    }
+
+    public void ClickCurrentQueue(View view){
+        //Redirect activity to manage accounts
+        Dashboard.redirectActivity(this, Queue.class);
+    }
+
+    public void ClickLogout(View view){
+        Dashboard.logout(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //close drawer
+        Dashboard.closeDrawer(drawerLayout);
     }
 
     private class GenerateRep extends AsyncTask<String,String,String> {

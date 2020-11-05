@@ -1,7 +1,5 @@
 package com.example.queuemanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +8,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.queuemanager.adapter.DoctorAdapter;
-import com.example.queuemanager.list.DepartmentList;
-import com.example.queuemanager.model.Department;
-import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.list.DoctorList;
+import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.session.KeruxSession;
 import com.example.queuemanager.session.QueueSession;
 
@@ -32,10 +30,13 @@ public class DoctorSelect extends AppCompatActivity {
     private KeruxSession session;
     private QueueSession qs;
 
+    DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_select);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         session = new KeruxSession(getApplicationContext());
         qs=new QueueSession(getApplicationContext());
@@ -64,9 +65,41 @@ public class DoctorSelect extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
+    public void ClickMenu (View view){
+        //open drawer
+        Dashboard.openDrawer(drawerLayout);
+    }
 
+    public void ClickLogo (View view){
+        //Close drawer
+        Dashboard.closeDrawer(drawerLayout);
+    }
 
+    public void ClickEditProfile(View view){
+        //Redirect activity to dashboard
+        Dashboard.redirectActivity(this, EditProfile.class);
+    }
 
+    public void ClickDashboard(View view){
+        //Redirect activity to dashboard
+        Dashboard.redirectActivity(this, Dashboard.class);
+    }
+
+    public void ClickCurrentQueue(View view){
+        //Redirect activity to manage accounts
+        Dashboard.redirectActivity(this, Queue.class);
+    }
+
+    public void ClickLogout(View view){
+        Dashboard.logout(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //close drawer
+        Dashboard.closeDrawer(drawerLayout);
     }
 }
