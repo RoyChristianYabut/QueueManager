@@ -23,14 +23,13 @@
 
         <ListView
             android:id="@+id/listView_ActiveQueues"
-            android:layout_width="440dp"
-            android:layout_height="663dp"
+            android:layout_width="406dp"
+            android:layout_height="482dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.525"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.674" />
+            app:layout_constraintVertical_bias="0.645" />
 
         <TextView
             android:id="@+id/txtView_qmname"

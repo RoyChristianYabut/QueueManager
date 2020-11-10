@@ -23,10 +23,17 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -231,69 +238,40 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
         ArrayList<String> data=new ArrayList<>();
         String error="";
         try {
-            Connection con = connectionClass.CONN();
-            if (con == null) {
-                error="Please check your internet connection";
-            } else {
 
-                String queryCOUNT=SELECT_REPORT_QUEUE_NUMBER;
 
-                PreparedStatement ps = con.prepareStatement(queryCOUNT);
-                ps.setString(1, queueid);
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/GeneratePDFDataQMServlet");
+            URLConnection connection = url.openConnection();
 
-                ResultSet rs=ps.executeQuery();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
 
-                while (rs.next())
-                {
-                    data.add("Total Number of Patients:         ");
-                    data.add(rs.getString(1));
-                }
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("queueid", queueid);
+            String query = builder.build().getEncodedQuery();
 
-                String querySERVED=SELECT_REPORT_QUEUE_SERVED;
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
 
-                PreparedStatement ps2 = con.prepareStatement(querySERVED);
-                ps2.setString(1, queueid);
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
 
-                ResultSet rs2=ps2.executeQuery();
-
-                while (rs2.next())
-                {
-                    data.add("Number of Patients Served:      ");
-                    data.add(rs2.getString(1));
-                }
-
-                String queryCANCELLED=SELECT_REPORT_QUEUE_CANCELLED;
-
-                PreparedStatement ps3 = con.prepareStatement(queryCANCELLED);
-                ps3.setString(1, queueid);
-
-                ResultSet rs3=ps3.executeQuery();
-
-                while (rs3.next())
-                {
-                    data.add("Number of Patients Cancelled: ");
-                    data.add(rs3.getString(1));
-                }
-
-                String queryLIST=SELECT_REPORT_QUEUE_LIST;
-
-                PreparedStatement ps4 = con.prepareStatement(queryLIST);
-                ps4.setString(1, queueid);
-
-                ResultSet rs4=ps4.executeQuery();
-
-                data.add("------------");
-                data.add("------------");
-                data.add("Queue Number");
-                data.add("Status");
-
-                while (rs4.next())
-                {
-                    data.add(rs4.getString(1));
-                    data.add(rs4.getString(2));
-                }
-
+            while ((returnString = in.readLine()) != null)
+            {
+                Log.d("returnString", returnString);
+                data.add(returnString);
             }
+
+            in.close();
+
+
         }
         catch (Exception ex)
         {

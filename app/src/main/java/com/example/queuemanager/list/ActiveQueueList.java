@@ -2,6 +2,7 @@ package com.example.queuemanager.list;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
@@ -15,6 +16,14 @@ import com.example.queuemanager.model.ActiveQueue;
 import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.security.Security;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -77,44 +86,44 @@ public class ActiveQueueList extends AsyncTask<Void,Void,String> implements DBUt
         String z;
         z=null;
         try {
-            Connection con = connectionClass.CONN();
-            Security sec =new Security();
-            if (con == null) {
-                z=null;
-            } else {
 
-                String query=SELECT_ACTIVE_QUEUE;
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/ActiveQueueListQMServlet");
+            URLConnection connection = url.openConnection();
 
-                PreparedStatement ps = con.prepareStatement(query);
-                ps.setString(1, queuemanager_id);
-                // stmt.executeUpdate(query);
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
 
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("queuemanager_id", queuemanager_id);
+            String query = builder.build().getEncodedQuery();
 
-                ResultSet rs=ps.executeQuery();
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
 
-                while (rs.next())
-                {
-                    String qid=rs.getString(1);
-                    String qname=rs.getString(2);
-                    String pcount="";
-
-                    String query1=SELECT_ACTIVE_QUEUE_NUMBER;
-
-                    PreparedStatement ps1 = con.prepareStatement(query1);
-                    ps1.setString(1, qid);
-                    // stmt.executeUpdate(query);
-
-
-                    ResultSet rs1=ps1.executeQuery();
-                    while(rs1.next()){
-                       pcount=rs1.getString(1);
-                    }
-                    activequeuesList.add(new ActiveQueue(R.drawable.briefcase, Integer.parseInt(qid), qname, pcount));
-                }
-
-                z="1";
-
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
+            ArrayList<String> output=new ArrayList<String>();
+            while ((returnString = in.readLine()) != null)
+            {
+                z = "1";
+                Log.d("returnString", returnString);
+                output.add(returnString);
             }
+            for (int i = 0; i < output.size(); i++) {
+                String line=output.get(i);
+                String [] words=line.split("\\s\\|\\s");
+                activequeuesList.add(new ActiveQueue(R.drawable.briefcase, Integer.parseInt(words[0]), words[1], words[2]));
+            }
+            in.close();
+
+
         }
         catch (Exception ex)
         {

@@ -2,9 +2,11 @@ package com.example.queuemanager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,8 +19,17 @@ import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.security.Security;
 import com.example.queuemanager.session.QueueSession;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class ManageQueue extends AppCompatActivity implements DBUtility {
@@ -151,28 +162,39 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
                 z="";
 
                 try {
-                    Connection con = connectionClass.CONN();
-                    Security sec =new Security();
-                    if (con == null) {
-                        z = "Please check your internet connection";
-                    } else {
 
-                        String query = UPDATE_MARK_PATIENT_AS_SERVED;
+                    URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/MarkServedQMServlet");
+                    URLConnection connection = url.openConnection();
 
-                        PreparedStatement ps = con.prepareStatement(query);
-                        ps.setInt(1, instanceid);
+                    connection.setReadTimeout(10000);
+                    connection.setConnectTimeout(15000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
 
-                        String query2= UPDATE_QUEUELIST_AS_SERVED;
-                        PreparedStatement ps2=con.prepareStatement(query2);
-                        ps2.setInt(1, instanceid);
-                        ps2.setString(2, queueid);
-                        // stmt.executeUpdate(query);
-                        isSuccess =true;
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter("instanceid", Integer.toString(instanceid))
+                            .appendQueryParameter("queueid", queueid);
+                    String query = builder.build().getEncodedQuery();
 
-                        ps.executeUpdate();
-                        ps2.executeUpdate();
-                        z="Patient Served";
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(query);
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String returnString="";
+                    ArrayList<String> output=new ArrayList<String>();
+                    while ((returnString = in.readLine()) != null)
+                    {
+                        z = "Patient Served";
+                        isSuccess=true;
+                        Log.d("returnString", returnString);
+                        output.add(returnString);
                     }
+                    in.close();
                 }
                 catch (Exception ex)
                 {
@@ -222,30 +244,38 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
             z="";
 
             try {
-                Connection con = connectionClass.CONN();
-                Security sec =new Security();
-                if (con == null) {
-                    z = "Please check your internet connection";
-                } else {
+                URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/MarkNoShowQMServlet");
+                URLConnection connection = url.openConnection();
 
-                    String query = UPDATE_MARK_PATIENT_AS_NO_SHOW;
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
 
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ps.setInt(1, instanceid);
-                    // stmt.executeUpdate(query);
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("instanceid", Integer.toString(instanceid))
+                        .appendQueryParameter("queueid", queueid);
+                String query = builder.build().getEncodedQuery();
 
-                    String query2= UPDATE_QUEUELIST_AS_NO_SHOW;
-                    PreparedStatement ps2=con.prepareStatement(query2);
-                    ps2.setInt(1, instanceid);
-                    ps2.setString(2, queueid);
-                    // stmt.executeUpdate(query);
-                    isSuccess =true;
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
 
-                    ps.executeUpdate();
-                    ps2.executeUpdate();
-
-                    z="Patient Cancelled";
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String returnString="";
+                ArrayList<String> output=new ArrayList<String>();
+                while ((returnString = in.readLine()) != null)
+                {
+                    z = "Patient Cancelled";
+                    isSuccess=true;
+                    Log.d("returnString", returnString);
+                    output.add(returnString);
                 }
+                in.close();
             }
             catch (Exception ex)
             {
@@ -295,28 +325,38 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
             z="";
 
             try {
-                Connection con = connectionClass.CONN();
-                Security sec =new Security();
-                if (con == null) {
-                    z = "Please check your internet connection";
-                } else {
+                URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/MarkCalledQMServlet");
+                URLConnection connection = url.openConnection();
 
-                    String query = UPDATE_MARK_PATIENT_AS_CALLED;
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
 
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ps.setInt(1, instanceid);
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("instanceid", Integer.toString(instanceid))
+                        .appendQueryParameter("queueid", queueid);
+                String query = builder.build().getEncodedQuery();
 
-                    String query2= UPDATE_QUEUELIST_AS_CALLED;
-                    PreparedStatement ps2=con.prepareStatement(query2);
-                    ps2.setInt(1, instanceid);
-                    ps2.setString(2, queueid);
-                    // stmt.executeUpdate(query);
-                    isSuccess =true;
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
 
-                    ps.executeUpdate();
-                    ps2.executeUpdate();
-                    z="Patient Served";
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String returnString="";
+                ArrayList<String> output=new ArrayList<String>();
+                while ((returnString = in.readLine()) != null)
+                {
+                    z = "Patient Called";
+                    isSuccess=true;
+                    Log.d("returnString", returnString);
+                    output.add(returnString);
                 }
+                in.close();
             }
             catch (Exception ex)
             {

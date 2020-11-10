@@ -3,6 +3,7 @@ package com.example.queuemanager.list;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
@@ -15,6 +16,7 @@ import com.example.queuemanager.MainActivity;
 import com.example.queuemanager.R;
 import com.example.queuemanager.adapter.DepartmentAdapter;
 import com.example.queuemanager.dbutility.DBUtility;
+import com.example.queuemanager.model.ActiveQueue;
 import com.example.queuemanager.model.Department;
 import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.security.Security;
@@ -22,10 +24,16 @@ import com.example.queuemanager.spinner.Connector;
 import com.example.queuemanager.spinner.Parser;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,32 +95,48 @@ public class DepartmentList extends AsyncTask<Void,Void,String> implements DBUti
         String z;
         z=null;
         try {
-            Connection con = connectionClass.CONN();
-            Security sec =new Security();
-            if (con == null) {
-                z=null;
-            } else {
-
-                String query=SELECT_DEPARTMENT_LIST;
-
-                PreparedStatement ps = con.prepareStatement(query);
-                ps.setString(1, clinicid);
-                // stmt.executeUpdate(query);
 
 
-                ResultSet rs=ps.executeQuery();
+                URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/DepartmentListQMServlet");
+                URLConnection connection = url.openConnection();
 
-                while (rs.next())
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("clinicid", clinicid);
+                String query = builder.build().getEncodedQuery();
+
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String returnString="";
+                ArrayList<String> output=new ArrayList<String>();
+                while ((returnString = in.readLine()) != null)
                 {
-                    departmentsList.add(new Department(R.drawable.briefcase, Integer.parseInt(rs.getString(1)), rs.getString(2)));
+                    z = "1";
+                    Log.d("returnString", returnString);
+                    output.add(returnString);
                 }
+                for (int i = 0; i < output.size(); i++) {
+                    String line=output.get(i);
+                    String [] words=line.split("\\s\\|\\s");
+                    departmentsList.add(new Department(R.drawable.briefcase, Integer.parseInt(words[0]), words[1]));
+                }
+                in.close();
 
-                z="1";
-
-            }
         }
         catch (Exception ex)
         {
+            Log.d("ERROR", ex.getMessage());
             z=null;
         }
 

@@ -2,7 +2,9 @@ package com.example.queuemanager.list;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -15,6 +17,14 @@ import com.example.queuemanager.model.Department;
 import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.security.Security;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -77,29 +87,42 @@ public class DoctorList extends AsyncTask<Void,Void,String> implements DBUtility
         String z;
         z=null;
         try {
-            Connection con = connectionClass.CONN();
-            Security sec =new Security();
-            if (con == null) {
-                z=null;
-            } else {
+//
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/DoctorListQMServlet");
+            URLConnection connection = url.openConnection();
 
-                String query=SELECT_DOCTOR_LIST;
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
 
-                PreparedStatement ps = con.prepareStatement(query);
-                ps.setString(1, clinicid);
-                // stmt.executeUpdate(query);
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("clinicid", clinicid);
+            String query = builder.build().getEncodedQuery();
 
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
 
-                ResultSet rs=ps.executeQuery();
-
-                while (rs.next())
-                {
-                    doctorsList.add(new Doctor(R.drawable.briefcase, Integer.parseInt(rs.getString(1)), rs.getString(5), rs.getString(6)));
-                }
-
-                z="1";
-
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
+            ArrayList<String> output=new ArrayList<String>();
+            while ((returnString = in.readLine()) != null)
+            {
+                z = "1";
+                Log.d("returnString", returnString);
+                output.add(returnString);
             }
+            for (int i = 0; i < output.size(); i++) {
+                String line=output.get(i);
+                String [] words=line.split("\\s\\|\\s");
+                doctorsList.add(new Doctor(R.drawable.briefcase, Integer.parseInt(words[0]), words[1], words[2]));
+            }
+            in.close();
         }
         catch (Exception ex)
         {

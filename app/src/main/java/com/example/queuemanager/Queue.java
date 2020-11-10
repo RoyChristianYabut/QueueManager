@@ -2,6 +2,7 @@ package com.example.queuemanager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -20,13 +21,23 @@ import com.example.queuemanager.adapter.QueueAdapter;
 import com.example.queuemanager.dateutility.DateUtility;
 import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.list.PatientList;
+import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.model.Patient;
 import com.example.queuemanager.security.Security;
 import com.example.queuemanager.session.QueueSession;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Queue extends AppCompatActivity implements DBUtility {
@@ -202,7 +213,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
     public void ClickDashboard(View view){
         //Redirect activity to dashboard
-        Dashboard.redirectActivity(this, MainActivity.class);
+        Dashboard.redirectActivity(this, Dashboard.class);
     }
 
     public void ClickCurrentQueue(View view){
@@ -241,38 +252,46 @@ public class Queue extends AppCompatActivity implements DBUtility {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    z = "Please check your internet connection";
-                } else {
 
                     if(qs.getqueueid()==null||qs.getqueueid().isEmpty()){
-                        String query2 = INSERT_INTO_QUEUE;
-                        String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-                        String mCurrentTime = DateUtility.getDateTimeFromTimeStamp(System.currentTimeMillis(), DATE_FORMAT);
+                        URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/BeginQueueQMServlet");
+                        URLConnection connection = url.openConnection();
 
+                        connection.setReadTimeout(10000);
+                        connection.setConnectTimeout(15000);
+                        connection.setDoInput(true);
+                        connection.setDoOutput(true);
 
-                        PreparedStatement ps1 = con.prepareStatement(query2);
-                        ps1.setString(1, qs.getdoctorfirstname() + " " + qs.getdoctorlastname());
-                        ps1.setString(2, mCurrentTime);
-                        ps1.setString(3, qs.getdoctorid());
-                        ps1.setString(4, qs.getdepartmentid());
+                        Uri.Builder builder = new Uri.Builder()
+                                .appendQueryParameter("queuename", qs.getdoctorfirstname() + " " + qs.getdoctorlastname())
+                                .appendQueryParameter("docid", qs.getdoctorid())
+                                .appendQueryParameter("depid",qs.getdepartmentid());
+                        String query = builder.build().getEncodedQuery();
 
-                        int i = ps1.executeUpdate();
-                        if (i == 1) {
-                            String query3 = GET_NEW_QUEUE_ID;
+                        OutputStream os = connection.getOutputStream();
+                        BufferedWriter writer = new BufferedWriter(
+                                new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(query);
+                        writer.flush();
+                        writer.close();
+                        os.close();
 
-                            PreparedStatement ps2 = con.prepareStatement(query3);
-
-                            ResultSet rs1 = ps2.executeQuery();
-
-                            while (rs1.next()) {
-                                qs.setqueueid(rs1.getString(1));
-                                isSuccess = true;
-                                Log.d("Insert Queue", qs.getqueueid());
-                                z= "Opening queue...";
-                            }
+                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        String returnString="";
+                        ArrayList<String> output=new ArrayList<String>();
+                        while ((returnString = in.readLine()) != null)
+                        {
+                            isSuccess=true;
+                            z = "Login successfull";
+                            Log.d("returnString", returnString);
+                            output.add(returnString);
                         }
+                        for (int i = 0; i < output.size(); i++) {
+
+                            qs.setqueueid(output.get(i));
+
+                        }
+                        in.close();
                     }
                     else{
                         isSuccess = true;
@@ -281,7 +300,6 @@ public class Queue extends AppCompatActivity implements DBUtility {
                     }
 
 
-                }
             } catch (Exception ex) {
                 isSuccess = false;
                 z = "Exceptions" + ex;
@@ -327,23 +345,37 @@ public class Queue extends AppCompatActivity implements DBUtility {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    z = "Please check your internet connection";
-                } else {
+                URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/EndQueueQMServlet");
+                URLConnection connection = url.openConnection();
 
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
 
-                    String query = UPDATE_QUEUE_ENDQUEUE;
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("queueid", qs.getqueueid());
+                String query = builder.build().getEncodedQuery();
 
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ps.setString(1, qs.getqueueid());
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
 
-                    int i = ps.executeUpdate();
-                    isSuccess = true;
-
-
-
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String returnString="";
+                ArrayList<String> output=new ArrayList<String>();
+                while ((returnString = in.readLine()) != null)
+                {
+                    z = "Queue Ended";
+                    isSuccess=true;
+                    Log.d("returnString", returnString);
+                    output.add(returnString);
                 }
+                in.close();
             } catch (Exception ex) {
                 isSuccess = false;
                 z = "Exceptions" + ex;
@@ -391,28 +423,39 @@ public class Queue extends AppCompatActivity implements DBUtility {
             z="";
 
             try {
-                Connection con = connectionClass.CONN();
-                Security sec =new Security();
-                if (con == null) {
-                    z = "Please check your internet connection";
-                } else {
 
-                    String query = UPDATE_MARK_PATIENT_AS_CALLED;
+                URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/MarkCalledQMServlet");
+                URLConnection connection = url.openConnection();
 
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ps.setInt(1, instanceidCall);
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
 
-                    String query2= UPDATE_QUEUELIST_AS_CALLED;
-                    PreparedStatement ps2=con.prepareStatement(query2);
-                    ps2.setInt(1, instanceidCall);
-                    ps2.setString(2, queueidCall);
-                    // stmt.executeUpdate(query);
-                    isSuccess =true;
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("instanceid", Integer.toString(instanceidCall))
+                        .appendQueryParameter("queueid", queueidCall);
+                String query = builder.build().getEncodedQuery();
 
-                    ps.executeUpdate();
-                    ps2.executeUpdate();
-                    z="Patient Served";
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String returnString="";
+                ArrayList<String> output=new ArrayList<String>();
+                while ((returnString = in.readLine()) != null)
+                {
+                    z = "Patient Called";
+                    isSuccess=true;
+                    Log.d("returnString", returnString);
+                    output.add(returnString);
                 }
+                in.close();
             }
             catch (Exception ex)
             {

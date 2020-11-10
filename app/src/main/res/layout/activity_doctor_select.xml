@@ -37,8 +37,8 @@
 
         <ListView
             android:id="@+id/listView_Doctors"
-            android:layout_width="412dp"
-            android:layout_height="751dp"
+            android:layout_width="416dp"
+            android:layout_height="719dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

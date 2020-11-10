@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +19,18 @@ import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.security.Security;
 import com.example.queuemanager.session.KeruxSession;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements DBUtility {
 
@@ -64,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
 
         String usernam=username.getText().toString();
         String passstr=password.getText().toString();
-        String z="";
+        String z="Login failed";
         boolean isSuccess=false;
 
         String qmid, clinicid,  un, fn, ln, e;
@@ -88,45 +100,64 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
             else
             {
                 try {
-                    Connection con = connectionClass.CONN();
-                    Security sec =new Security();
-                    if (con == null) {
-                        z = "Please check your internet connection";
-                    } else {
-
-                        String query=LOGIN_CRED;
-
-                        PreparedStatement ps = con.prepareStatement(query);
-                        ps.setString(1, usernam);
-                        ps.setString(2, passstr);
-                        // stmt.executeUpdate(query);
 
 
-                        ResultSet rs=ps.executeQuery();
+                    URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/LoginQMServlet");
+                    URLConnection connection = url.openConnection();
 
-                        while (rs.next())
-                        {
-                            qmid=rs.getString(1);
-                            clinicid=rs.getString(2);
-                            un=rs.getString(3);
-                            fn=rs.getString(4);
-                            ln=rs.getString(5);
-                            e=rs.getString(6);
-                            isSuccess=true;
-                            z = "Login successfull";
+                    connection.setReadTimeout(10000);
+                    connection.setConnectTimeout(15000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
 
-                            session.setqueuemanagerid(qmid);
-                            session.setclinicid(clinicid);
-                            session.setusername(un);
-                            session.setfirstname(fn);
-                            session.setlastname(ln);
-                            session.setemail(e);
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter("username", usernam)
+                            .appendQueryParameter("password", passstr);
+                    String query = builder.build().getEncodedQuery();
 
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(query);
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String returnString="";
+                    ArrayList<String> output=new ArrayList<String>();
+                    while ((returnString = in.readLine()) != null)
+                    {
+                        isSuccess=true;
+                        z = "Login successfull";
+                        Log.d("returnString", returnString);
+                        output.add(returnString);
+                    }
+                    for (int i = 0; i < output.size(); i++) {
+
+                        if(i==0){
+                            qmid=output.get(i);
+                        }
+                        else if(i==1){
+                            clinicid=output.get(i);
+                        }
+                        else if(i==2){
+                            un=output.get(i);
+                        }
+                        else if(i==3){
+                            fn=output.get(i);
+                        }
+                        else if(i==4){
+                            ln=output.get(i);
+                        }
+                        else if(i==5){
+                            e=output.get(i);
                         }
 
-
-
                     }
+                    in.close();
+
+
                 }
                 catch (Exception ex)
                 {
@@ -143,7 +174,12 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
 
             progressDialog.dismiss();
             if(isSuccess) {
-
+                session.setqueuemanagerid(qmid);
+                session.setclinicid(clinicid);
+                session.setusername(un);
+                session.setfirstname(fn);
+                session.setlastname(ln);
+                session.setemail(e);
                 Intent intent=new Intent(MainActivity.this,Dashboard.class);
 
                 // intent.putExtra("name",usernam);
