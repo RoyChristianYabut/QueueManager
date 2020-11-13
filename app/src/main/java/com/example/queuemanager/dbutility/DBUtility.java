@@ -6,10 +6,14 @@ public interface DBUtility {
 //    String dbUserName = "ZtZog8cq99D+yewURdclvw==";
 //    String dbPassword = "Z+pHcz0oWkDRL90KPQ5jQA";
 
-    String jdbcDriverName = "com.mysql.jdbc.Driver";
+/*    String jdbcDriverName = "com.mysql.jdbc.Driver";
     String jdbcUrl ="jdbc:mysql://10.70.0.17/keruxdbupdate";
     String dbUserName = "KeruxAdmin";
-    String dbPassword = "admin";
+    String dbPassword = "admin";*/
+    String jdbcDriverName = "com.mysql.jdbc.Driver";//vxcd9lOiVlb9DcyuaKAzLr5qD7AQB+5gr7zwfl1MXhY=
+    String jdbcUrl ="jdbc:mysql://192.168.1.13/kerux";//jdbc:mysql://192.168.1.1/keruxdb
+    String dbUserName = "user";//user//o9gPQILs8mlgWTtuaBMBFA==
+    String dbPassword = "admin";//admin//oCeOPEBYh4uhgDL4d2Q/8g==
 
     String LOGIN_CRED="select queuemanager_id, clinic_id, username, firstname, lastname, email from queuemanager where username=? and password =?";
 

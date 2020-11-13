@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.security.Security;
+import com.example.queuemanager.session.KeruxSession;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
@@ -33,10 +34,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,12 +49,14 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
     ConnectionClass connectionClass;
 
     DrawerLayout drawerLayout;
+    KeruxSession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_report);
         drawerLayout = findViewById(R.id.drawer_layout);
+        session=new KeruxSession(getApplicationContext());
 
         progressDialog=new ProgressDialog(this);
         connectionClass =new ConnectionClass();
@@ -69,9 +70,56 @@ public class GenerateReport extends AppCompatActivity implements DBUtility {
             public void onClick(View v) {
                 GenerateRep generateRep = new GenerateRep();
                 generateRep.execute();
+                insertAudit();
             }
         });
 
+    }
+
+    //insert to audit logs
+    public void insertAudit(){
+
+        Security sec = new Security();
+
+        try {
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/InsertAuditAdminServlet");
+            URLConnection connection = url.openConnection();
+
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("first", sec.encrypt("Generate Reports"))
+                    .appendQueryParameter("second", sec.encrypt("Queue Manager generate queue reports"))
+                    .appendQueryParameter("third", sec.encrypt("Queue Manager generating queue reports"))
+                    .appendQueryParameter("fourth", sec.encrypt("none"))
+                    .appendQueryParameter("fifth", sec.encrypt("Queue Manager ID: " + session.getqueuemanagerid()))
+                    .appendQueryParameter("sixth", session.getqueuemanagerid());
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, StandardCharsets.UTF_8));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
+            ArrayList<String> output=new ArrayList<String>();
+            while ((returnString = in.readLine()) != null)
+            {
+                Log.d("returnString", returnString);
+                output.add(returnString);
+            }
+            in.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void ClickMenu (View view){

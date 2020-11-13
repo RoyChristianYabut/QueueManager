@@ -1,6 +1,7 @@
 package com.example.queuemanager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +15,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.queuemanager.adapter.DoctorAdapter;
 import com.example.queuemanager.list.DoctorList;
 import com.example.queuemanager.model.Doctor;
+import com.example.queuemanager.security.Security;
 import com.example.queuemanager.session.KeruxSession;
 import com.example.queuemanager.session.QueueSession;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class DoctorSelect extends AppCompatActivity {
@@ -63,8 +73,55 @@ public class DoctorSelect extends AppCompatActivity {
                 intent.putExtras(extras);
                 startActivity(intent);
                 finish();
+                insertAudit();
             }
         });
+    }
+
+    //insert to audit logs
+    public void insertAudit(){
+
+        Security sec = new Security();
+
+        try {
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/InsertAuditAdminServlet");
+            URLConnection connection = url.openConnection();
+
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("first", sec.encrypt("Select Doctor"))
+                    .appendQueryParameter("second", sec.encrypt("Doctor Select"))
+                    .appendQueryParameter("third", sec.encrypt("Queue Manager selecting doctors to start queue"))
+                    .appendQueryParameter("fourth", sec.encrypt("none"))
+                    .appendQueryParameter("fifth", sec.encrypt("Queue Manager ID: " + session.getqueuemanagerid()))
+                    .appendQueryParameter("sixth", session.getqueuemanagerid());
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, StandardCharsets.UTF_8));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
+            ArrayList<String> output=new ArrayList<String>();
+            while ((returnString = in.readLine()) != null)
+            {
+                Log.d("returnString", returnString);
+                output.add(returnString);
+            }
+            in.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void ClickMenu (View view){

@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.security.Security;
+import com.example.queuemanager.session.KeruxSession;
 import com.example.queuemanager.session.QueueSession;
 
 import java.io.BufferedReader;
@@ -26,9 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -47,6 +46,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
     private QueueSession qs;
 
     DrawerLayout drawerLayout;
+    KeruxSession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
         setContentView(R.layout.activity_manage_queue);
         connectionClass =new ConnectionClass();
         drawerLayout = findViewById(R.id.drawer_layout);
+        session=new KeruxSession(getApplicationContext());
 
         txtPatient =(TextView)findViewById(R.id.txtPatient);
         btnCallAgain=(Button)findViewById(R.id.btnCallAgain);
@@ -63,7 +64,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
         progressDialog=new ProgressDialog(this);
         qs = new QueueSession(getApplicationContext());
 
-        Intent i= getIntent();
+        final Intent i= getIntent();
         queueid=i.getStringExtra("queueid");
         queuenumber=i.getStringExtra("queuenumber");
         instanceid=i.getIntExtra("instanceid", 0);
@@ -87,6 +88,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
                 markCalled.execute();
                 String toSpeak = txtPatient.getText().toString();
                 t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                insertAudit();
             }
         });
 
@@ -95,6 +97,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
             public void onClick(View v) {
                 MarkServed markServed = new MarkServed();
                 markServed.execute();
+                insertAudit();
             }
         });
 
@@ -103,8 +106,55 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
             public void onClick(View v) {
                 MarkNoShow markNoShow = new MarkNoShow();
                 markNoShow.execute();
+                insertAudit();
             }
         });
+    }
+
+    //insert to audit logs
+    public void insertAudit(){
+
+        Security sec = new Security();
+
+        try {
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/InsertAuditAdminServlet");
+            URLConnection connection = url.openConnection();
+
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("first", sec.encrypt("Queue Actions"))
+                    .appendQueryParameter("second", sec.encrypt("Queue Manager actions for queue"))
+                    .appendQueryParameter("third", sec.encrypt("Queue Manager starting actions for queue"))
+                    .appendQueryParameter("fourth", sec.encrypt("none"))
+                    .appendQueryParameter("fifth", sec.encrypt("Queue Manager ID: " + session.getqueuemanagerid()))
+                    .appendQueryParameter("sixth", session.getqueuemanagerid());
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, StandardCharsets.UTF_8));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
+            ArrayList<String> output=new ArrayList<String>();
+            while ((returnString = in.readLine()) != null)
+            {
+                Log.d("returnString", returnString);
+                output.add(returnString);
+            }
+            in.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void ClickMenu (View view){

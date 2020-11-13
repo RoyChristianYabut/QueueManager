@@ -18,12 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.queuemanager.adapter.QueueAdapter;
-import com.example.queuemanager.dateutility.DateUtility;
 import com.example.queuemanager.dbutility.DBUtility;
 import com.example.queuemanager.list.PatientList;
-import com.example.queuemanager.model.Doctor;
 import com.example.queuemanager.model.Patient;
 import com.example.queuemanager.security.Security;
+import com.example.queuemanager.session.KeruxSession;
 import com.example.queuemanager.session.QueueSession;
 
 import java.io.BufferedReader;
@@ -33,10 +32,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -59,6 +55,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
     ProgressDialog progressDialog; //
     ConnectionClass connectionClass; //
+    KeruxSession session;
 
     private int instanceidCall;
     private String queueidCall;
@@ -71,6 +68,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
         connectionClass = new ConnectionClass();//
         progressDialog = new ProgressDialog(this);//
+        session=new KeruxSession(getApplicationContext());
 
         qs = new QueueSession(getApplicationContext());
 
@@ -88,6 +86,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
             public void onClick(View v) {
                 BeginQueue beginqueue = new BeginQueue();
                 beginqueue.execute();
+                insertAudit();
             }
         });
        queueid=0;
@@ -100,8 +99,6 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 }
             }
         });
-
-
 
 
 //      boolean successPatientList=false;
@@ -185,6 +182,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
             public void onClick(View v) {
                 EndQueue endQueue=new EndQueue();
                 endQueue.execute();
+                insertAudit();
             }
         });
         refresh.setOnClickListener(new View.OnClickListener() {//
@@ -194,6 +192,52 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 pl.execute();
             }
         });
+    }
+
+    //insert to audit logs
+    public void insertAudit(){
+
+        Security sec = new Security();
+
+        try {
+            URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/InsertAuditAdminServlet");
+            URLConnection connection = url.openConnection();
+
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("first", sec.encrypt("Queue Begin and End Actions"))
+                    .appendQueryParameter("second", sec.encrypt("Start and End Queue"))
+                    .appendQueryParameter("third", sec.encrypt("Queue Manager actions for starting and ending queue"))
+                    .appendQueryParameter("fourth", sec.encrypt("none"))
+                    .appendQueryParameter("fifth", sec.encrypt("Queue Manager ID: " + session.getqueuemanagerid()))
+                    .appendQueryParameter("sixth", session.getqueuemanagerid());
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, StandardCharsets.UTF_8));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String returnString="";
+            ArrayList<String> output=new ArrayList<String>();
+            while ((returnString = in.readLine()) != null)
+            {
+                Log.d("returnString", returnString);
+                output.add(returnString);
+            }
+            in.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void ClickMenu (View view){
