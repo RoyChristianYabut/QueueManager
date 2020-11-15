@@ -112,7 +112,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                     Intent intent = new Intent(Queue.this, ManageQueue.class);
                     Patient item = (Patient) listView.getAdapter().getItem(position);
-                    Toast.makeText(getBaseContext(), "1: "+queueid+" 2: "+item.getQueueNumber()+" 3: "+item.getInstanceid(), Toast.LENGTH_LONG).show();
+
                     intent.putExtra("queueid", Integer.toString(queueid));
                     intent.putExtra("queuenumber", item.getQueueNumber());
                     intent.putExtra("instanceid", item.getInstanceid());
@@ -309,7 +309,8 @@ public class Queue extends AppCompatActivity implements DBUtility {
                         Uri.Builder builder = new Uri.Builder()
                                 .appendQueryParameter("queuename", qs.getdoctorfirstname() + " " + qs.getdoctorlastname())
                                 .appendQueryParameter("docid", qs.getdoctorid())
-                                .appendQueryParameter("depid",qs.getdepartmentid());
+                                .appendQueryParameter("depid",qs.getdepartmentid())
+                                .appendQueryParameter("qmid",session.getqueuemanagerid());
                         String query = builder.build().getEncodedQuery();
 
                         OutputStream os = connection.getOutputStream();

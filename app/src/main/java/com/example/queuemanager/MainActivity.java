@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
             else
             {
                 try {
-
+                    Security sec = new Security();
 
                     URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/LoginQMServlet");
                     URLConnection connection = url.openConnection();
@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
                     connection.setDoOutput(true);
 
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("username", usernam)
-                            .appendQueryParameter("password", passstr);
+                            .appendQueryParameter("username", sec.encrypt(usernam))
+                            .appendQueryParameter("password", sec.encrypt(passstr));
                     String query = builder.build().getEncodedQuery();
 
                     OutputStream os = connection.getOutputStream();
