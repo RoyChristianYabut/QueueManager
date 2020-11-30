@@ -22,23 +22,23 @@
 
         <TextView
             android:id="@+id/txtView_departmentName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="142dp"
+            android:layout_height="16dp"
             android:fontFamily="@font/anton"
             android:text="Department"
-            android:textColor="@color/colorPrimaryBlack"
+            android:textColor="@color/colorBackground"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.469"
+            app:layout_constraintHorizontal_bias="0.076"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.016" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <ListView
             android:id="@+id/listView_Doctors"
-            android:layout_width="416dp"
-            android:layout_height="719dp"
+            android:layout_width="408dp"
+            android:layout_height="670dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

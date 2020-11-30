@@ -19,20 +19,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/selectedpatient" />
+
         <TextView
             android:id="@+id/txtPatient"
-            android:layout_width="397dp"
-            android:layout_height="57dp"
+            android:layout_width="355dp"
+            android:layout_height="51dp"
             android:fontFamily="@font/anton"
             android:text="TextView"
             android:textColor="@color/colorPrimaryBlack"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.119" />
+            app:layout_constraintVertical_bias="0.145" />
 
         <Button
             android:id="@+id/btnCallAgain"

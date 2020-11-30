@@ -23,17 +23,18 @@
 
         <TextView
             android:id="@+id/queueName"
-            android:layout_width="336dp"
-            android:layout_height="57dp"
+            android:layout_width="290dp"
+            android:layout_height="15dp"
             android:fontFamily="@font/anton"
             android:text="TextView"
-            android:textColor="@color/colorPrimaryBlack"
+            android:textColor="@color/colorBackground"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.184"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.027" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/beginQueue"

@@ -130,8 +130,17 @@ public class PatientList extends AsyncTask<Void,Void,String> implements DBUtilit
                 String notnullline = line.replaceAll("null", "0");
                 String [] words=notnullline.split("\\s\\|\\s");
                 Log.d("perror", words[0]+"?"+words[1]+"?"+words[2]+"?"+words[3]+"?"+words[4]+"?"+words[5]+"?"+words[6]);
-
-                patientsList.add(new Patient(R.drawable.briefcase, Integer.parseInt(words[0]), Integer.parseInt(words[1]), words[2], words[3], words[4], words[5], words[6]));
+                String qType="";
+                if(words[2].equals("1")){
+                    qType="Regular";
+                }
+                if(words[2].equals("2")){
+                    qType="HMO";
+                }
+                if(words[2].equals("3")){
+                    qType="PWD & Senior";
+                }
+                patientsList.add(new Patient(R.drawable.briefcase, Integer.parseInt(words[0]), Integer.parseInt(words[1]), qType, words[3], words[4], words[5], words[6]));
 
             }
             in.close();

@@ -23,8 +23,8 @@
 
         <ListView
             android:id="@+id/listview_Departments"
-            android:layout_width="413dp"
-            android:layout_height="716dp"
+            android:layout_width="393dp"
+            android:layout_height="645dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.506"
