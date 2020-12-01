@@ -22,27 +22,27 @@
 
         <Button
             android:id="@+id/button_save"
-            android:layout_width="214dp"
-            android:layout_height="58dp"
+            android:layout_width="192dp"
+            android:layout_height="45dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.076"
+            app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.975" />
+            app:layout_constraintVertical_bias="0.934" />
 
         <Button
             android:id="@+id/button_confirm"
-            android:layout_width="214dp"
-            android:layout_height="58dp"
+            android:layout_width="208dp"
+            android:layout_height="55dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintHorizontal_bias="0.941"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.975" />
+            app:layout_constraintVertical_bias="0.944" />
 
         <EditText
             android:id="@+id/editFirstName"
