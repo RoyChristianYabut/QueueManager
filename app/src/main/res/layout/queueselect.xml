@@ -2,49 +2,53 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    card_view:cardUseCompatPadding="true"
+    android:layout_marginBottom="16dp"
     card_view:cardCornerRadius="8dp"
-    android:layout_marginBottom="16dp">
+    card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="4dp">
+
         <ImageView
             android:id="@+id/patientimageView"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/briefcase"/>
+            android:src="@drawable/briefcase" />
+
         <TextView
             android:id="@+id/patientNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_alignTop="@+id/patientimageView"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/patientimageView"
-            android:layout_toEndOf="@+id/patientimageView"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/patientimageView"
+            android:layout_toRightOf="@+id/patientimageView" />
+
         <TextView
             android:id="@+id/patientType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@+id/patientNumber"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/patientimageView"
-            android:layout_toEndOf="@+id/patientimageView"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/patientimageView"
+            android:layout_toRightOf="@+id/patientimageView" />
+
         <TextView
             android:id="@+id/patientStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="13dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"/>
+            android:layout_marginRight="10dp" />
 
     </RelativeLayout>
 
