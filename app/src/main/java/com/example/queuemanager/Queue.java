@@ -298,7 +298,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
             try {
 
                     if(qs.getqueueid()==null||qs.getqueueid().isEmpty()){
-                        URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/BeginQueueQMServlet");
+                        URL url = new URL("http://10.70.3.1:8080/KeruxRootAdmin/BeginQueueQMServlet");
                         URLConnection connection = url.openConnection();
 
                         connection.setReadTimeout(10000);

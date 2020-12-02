@@ -26,13 +26,12 @@ import java.util.ArrayList;
 
 public class EditProfile extends AppCompatActivity {
 
-    private EditText patientFName;
-    private EditText patientLName;
-    private EditText patientNewPassword;
-    private EditText patientOldPassword;
-    private EditText patientEmail;
-    private EditText patientContactNo;
-    private String PatientID;
+    private EditText qmFName;
+    private EditText qmLName;
+    private EditText qmNewPassword;
+    private EditText qmOldPassword;
+    private EditText qmEmail;
+    private String qmID;
     private Button saveChanges;
     private Button confirmPass;
 
@@ -53,18 +52,16 @@ public class EditProfile extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
 
-        patientFName = (EditText)findViewById(R.id.editFirstName);
-        patientLName = (EditText)findViewById(R.id.editLastName);
-        patientNewPassword = (EditText)findViewById(R.id.editPatientPassword);
-        patientOldPassword = (EditText)findViewById(R.id.editPatientOldPassword);
-        patientEmail = (EditText)findViewById(R.id.editEmailText);
-        patientContactNo = (EditText)findViewById(R.id.editPatientContactNo);
+        qmFName = (EditText)findViewById(R.id.editFirstName);
+        qmLName = (EditText)findViewById(R.id.editLastName);
+        qmNewPassword = (EditText)findViewById(R.id.editPatientPassword);
+        qmOldPassword = (EditText)findViewById(R.id.editPatientOldPassword);
+        qmEmail = (EditText)findViewById(R.id.editEmailText);
 
-        patientFName.setText(session.getfirstname());
-        patientLName.setText(session.getlastname());
-        patientContactNo.setText(session.getusername());
-        patientEmail.setText(session.getemail());
-        PatientID=session.getqueuemanagerid();
+        qmFName.setText(session.getfirstname());
+        qmLName.setText(session.getlastname());
+        qmEmail.setText(session.getemail());
+        qmID=session.getqueuemanagerid();
 
         saveChanges = (Button)findViewById(R.id.button_save);
         confirmPass = (Button)findViewById(R.id.button_confirm);
@@ -72,9 +69,16 @@ public class EditProfile extends AppCompatActivity {
         saveChanges.setOnClickListener(new View.OnClickListener() {//
             @Override
             public void onClick(View v) {
-                updatePatientInfo updatepinfo=new updatePatientInfo();
-                updatepinfo.execute();
-//                insertAudit();
+                updateQMInfo updateqinfo=new updateQMInfo();
+                updateqinfo.execute();
+            }
+        });
+
+        confirmPass.setOnClickListener(new View.OnClickListener() {//
+            @Override
+            public void onClick(View v) {
+                updateQMPass updateminfo=new updateQMPass();
+                updateminfo.execute();
             }
         });
     }
@@ -114,11 +118,10 @@ public class EditProfile extends AppCompatActivity {
         Dashboard.closeDrawer(drawerLayout);
     }
 
-    private class updatePatientInfo extends AsyncTask<String,String,String> {
-        String patientFirstName=patientFName.getText().toString();
-        String patientLastName=patientLName.getText().toString();
-        String patientEmai = patientEmail.getText().toString();
-        String patientContactN = patientContactNo.getText().toString();
+    private class updateQMInfo extends AsyncTask<String,String,String> {
+        String qmFirstName=qmFName.getText().toString();
+        String qmLastName=qmLName.getText().toString();
+        String qmEmai = qmEmail.getText().toString();
 
         String z = "";
         boolean isSuccess = false;
@@ -139,7 +142,7 @@ public class EditProfile extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            if(patientFirstName.trim().equals("")||patientLastName.trim().equals(""))
+            if(qmFirstName.trim().equals("")||qmLastName.trim().equals(""))
                 z = "Please enter values in the First Name and Last Name.";
             else
             {
@@ -154,11 +157,9 @@ public class EditProfile extends AppCompatActivity {
                     connection.setDoOutput(true);
 
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("qmEmail", patientEmai)
-                            .appendQueryParameter("qmFirstName", patientFirstName)
-                            .appendQueryParameter("qmLastName", patientLastName)
-                            .appendQueryParameter("qmContactN", patientContactN)
-                            .appendQueryParameter("qmID", PatientID);
+                            .appendQueryParameter("qmEmail", qmEmai)
+                            .appendQueryParameter("qmFirstName", qmFirstName)
+                            .appendQueryParameter("qmID", qmID);
                     String query = builder.build().getEncodedQuery();
 
                     OutputStream os = connection.getOutputStream();
@@ -174,10 +175,9 @@ public class EditProfile extends AppCompatActivity {
                     ArrayList<String> output=new ArrayList<String>();
                     while ((returnString = in.readLine()) != null)
                     {
-                        session.setemail(patientEmai);
-                        session.setfirstname(patientFirstName);
-                        session.setlastname(patientLastName);
-                        session.setusername(patientContactN);
+                        session.setemail(qmEmai);
+                        session.setfirstname(qmFirstName);
+                        session.setlastname(qmLastName);
                         isSuccess=true;
                         z = "Profile successfully edited!";
                         output.add(returnString);
@@ -210,10 +210,10 @@ public class EditProfile extends AppCompatActivity {
 
     }
 
-    private class updatePatientPass extends AsyncTask<String,String,String> {
+    private class updateQMPass extends AsyncTask<String,String,String> {
 
-        String patientNewPass = patientNewPassword.getText().toString();
-        String patientOldPass = patientOldPassword.getText().toString();
+        String qmNewPass = qmNewPassword.getText().toString();
+        String qmOldPass = qmOldPassword.getText().toString();
 
 
         String z = "";
@@ -239,7 +239,7 @@ public class EditProfile extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            if(patientOldPass.trim().equals("")||patientNewPass.trim().equals(""))
+            if(qmOldPass.trim().equals("")||qmNewPass.trim().equals(""))
                 z = "Please enter your old and new password.";
             else
             {
@@ -255,9 +255,9 @@ public class EditProfile extends AppCompatActivity {
                     connection.setDoOutput(true);
 
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("patientid", PatientID)
-                            .appendQueryParameter("oldPassword", patientOldPass)
-                            .appendQueryParameter("newpass", patientNewPass);
+                            .appendQueryParameter("patientid", qmID)
+                            .appendQueryParameter("oldPassword", qmOldPass)
+                            .appendQueryParameter("newpass", qmNewPass);
                     String query = builder.build().getEncodedQuery();
 
                     OutputStream os = connection.getOutputStream();
