@@ -10,14 +10,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
             android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/imageView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/editprofile" />
 
         <Button
@@ -27,10 +30,10 @@
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintHorizontal_bias="0.093"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.934" />
+            app:layout_constraintVertical_bias="0.953" />
 
         <Button
             android:id="@+id/button_confirm"
@@ -42,12 +45,12 @@
             app:layout_constraintHorizontal_bias="0.941"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.944" />
+            app:layout_constraintVertical_bias="0.952" />
 
         <EditText
             android:id="@+id/editFirstName"
-            android:layout_width="266dp"
-            android:layout_height="54dp"
+            android:layout_width="264dp"
+            android:layout_height="41dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -55,15 +58,32 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.799"
+            app:layout_constraintHorizontal_bias="0.75"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.389" />
+            app:layout_constraintVertical_bias="0.361" />
+
+        <se.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter
+            android:id="@+id/passwordInputMeter"
+            android:layout_width="389dp"
+            android:layout_height="43dp"
+            app:animateChanges="true"
+            app:animationDuration="300"
+            app:labelTextSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.879"
+            app:showStrengthBar="true"
+            app:showStrengthLabel="true"
+            app:strengthBarHeight="10dp" />
 
         <EditText
             android:id="@+id/editEmailText"
-            android:layout_width="327dp"
-            android:layout_height="51dp"
+            android:layout_width="324dp"
+            android:layout_height="42dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -71,15 +91,15 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.718"
+            app:layout_constraintHorizontal_bias="0.717"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.581" />
+            app:layout_constraintVertical_bias="0.561" />
 
         <EditText
             android:id="@+id/editLastName"
             android:layout_width="265dp"
-            android:layout_height="52dp"
+            android:layout_height="43dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -87,15 +107,15 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.748"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.489" />
+            app:layout_constraintVertical_bias="0.464" />
 
         <EditText
             android:id="@+id/editPatientContactNo"
-            android:layout_width="258dp"
-            android:layout_height="59dp"
+            android:layout_width="255dp"
+            android:layout_height="44dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -103,15 +123,15 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.806"
+            app:layout_constraintHorizontal_bias="0.72"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.289" />
+            app:layout_constraintVertical_bias="0.264" />
 
         <EditText
             android:id="@+id/editPatientOldPassword"
-            android:layout_width="242dp"
-            android:layout_height="60dp"
+            android:layout_width="232dp"
+            android:layout_height="46dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -119,15 +139,15 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.819"
+            app:layout_constraintHorizontal_bias="0.786"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.752" />
+            app:layout_constraintVertical_bias="0.719" />
 
         <EditText
             android:id="@+id/editPatientPassword"
-            android:layout_width="229dp"
-            android:layout_height="56dp"
+            android:layout_width="233dp"
+            android:layout_height="44dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -135,10 +155,10 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.776"
+            app:layout_constraintHorizontal_bias="0.785"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.841" />
+            app:layout_constraintVertical_bias="0.81" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -24,6 +24,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import se.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter;
+
 public class EditProfile extends AppCompatActivity {
 
     private EditText qmFName;
@@ -81,6 +83,9 @@ public class EditProfile extends AppCompatActivity {
                 updateminfo.execute();
             }
         });
+
+        PasswordStrengthMeter meter = findViewById(R.id.passwordInputMeter);
+        meter.setEditText(qmNewPassword);
     }
     public void ClickMenu (View view){
         //open drawer
