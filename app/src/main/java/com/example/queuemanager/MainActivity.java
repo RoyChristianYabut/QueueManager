@@ -208,8 +208,8 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
                     connection.setDoOutput(true);
 
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("username", usernam)
-                            .appendQueryParameter("password", passstr);
+                            .appendQueryParameter("username", usernam.trim())
+                            .appendQueryParameter("password", passstr.trim());
                     String query = builder.build().getEncodedQuery();
 
                     OutputStream os = connection.getOutputStream();
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
         protected void onPostExecute(String s) {
             Security sec = new Security();
             try{
-                Toast.makeText(getBaseContext(),""+sec.decrypt("c83O6AeNEP/AtLtAQc/6iw==")+"}}}"+sec.decrypt("yJQnnS0bN99Pyy5xyblN3Q=="),Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),""+s,Toast.LENGTH_LONG).show();
             } catch(Exception e){
                 e.printStackTrace();
             }
