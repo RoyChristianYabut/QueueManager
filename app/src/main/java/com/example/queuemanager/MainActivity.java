@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
                 try {
                     Security sec = new Security();
 
-                    URL url = new URL("http://10.70.3.1:8080/KeruxRootAdmin/LoginQMServlet");
+                    URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/LoginQMServlet");
                     URLConnection connection = url.openConnection();
 
                     connection.setReadTimeout(10000);
@@ -208,8 +208,8 @@ public class MainActivity extends AppCompatActivity implements DBUtility {
                     connection.setDoOutput(true);
 
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("username", sec.encrypt(usernam).trim())
-                            .appendQueryParameter("password", sec.encrypt(passstr).trim());
+                            .appendQueryParameter("username", usernam)
+                            .appendQueryParameter("password", passstr);
                     String query = builder.build().getEncodedQuery();
 
                     OutputStream os = connection.getOutputStream();
