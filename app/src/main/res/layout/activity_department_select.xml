@@ -23,14 +23,14 @@
 
         <ListView
             android:id="@+id/listview_Departments"
-            android:layout_width="393dp"
-            android:layout_height="645dp"
+            android:layout_width="330dp"
+            android:layout_height="583dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.893" />
+            app:layout_constraintVertical_bias="0.956" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

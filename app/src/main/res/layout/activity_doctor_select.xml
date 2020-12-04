@@ -37,13 +37,13 @@
 
         <ListView
             android:id="@+id/listView_Doctors"
-            android:layout_width="408dp"
-            android:layout_height="670dp"
+            android:layout_width="330dp"
+            android:layout_height="584dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.881" />
+            app:layout_constraintVertical_bias="0.955" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout

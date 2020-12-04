@@ -73,8 +73,8 @@
 
         <ListView
             android:id="@+id/patientList"
-            android:layout_width="410dp"
-            android:layout_height="433dp"
+            android:layout_width="330dp"
+            android:layout_height="365dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.507"
