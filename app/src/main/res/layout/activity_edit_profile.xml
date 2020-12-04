@@ -49,8 +49,8 @@
 
         <EditText
             android:id="@+id/editFirstName"
-            android:layout_width="264dp"
-            android:layout_height="41dp"
+            android:layout_width="232dp"
+            android:layout_height="37dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -58,10 +58,10 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintHorizontal_bias="0.81"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.361" />
+            app:layout_constraintVertical_bias="0.367" />
 
         <se.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter
             android:id="@+id/passwordInputMeter"
@@ -82,8 +82,8 @@
 
         <EditText
             android:id="@+id/editEmailText"
-            android:layout_width="324dp"
-            android:layout_height="42dp"
+            android:layout_width="288dp"
+            android:layout_height="31dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -91,15 +91,15 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.717"
+            app:layout_constraintHorizontal_bias="0.77"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.561" />
 
         <EditText
             android:id="@+id/editLastName"
-            android:layout_width="265dp"
-            android:layout_height="43dp"
+            android:layout_width="235dp"
+            android:layout_height="36dp"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="textPersonName"
@@ -107,10 +107,10 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.748"
+            app:layout_constraintHorizontal_bias="0.82"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.464" />
+            app:layout_constraintVertical_bias="0.465" />
 
         <EditText
             android:id="@+id/editPatientContactNo"
@@ -139,10 +139,10 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.786"
+            app:layout_constraintHorizontal_bias="0.866"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.719" />
+            app:layout_constraintVertical_bias="0.725" />
 
         <EditText
             android:id="@+id/editPatientPassword"
@@ -155,10 +155,10 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.785"
+            app:layout_constraintHorizontal_bias="0.866"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.81" />
+            app:layout_constraintVertical_bias="0.814" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
