@@ -48,6 +48,7 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
     DrawerLayout drawerLayout;
     KeruxSession session;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +69,8 @@ public class ManageQueue extends AppCompatActivity implements DBUtility {
         queueid=i.getStringExtra("queueid");
         queuenumber=i.getStringExtra("queuenumber");
         instanceid=i.getIntExtra("instanceid", 0);
-
+//        queueid=qs.getqueueid();
+//        instanceid=Integer.parseInt(qs.getqueueid());
         txtPatient.setText("Patient #"+queuenumber);
 
 

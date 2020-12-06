@@ -44,6 +44,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
     private Button beginbutton;
     private Button endbutton;
+    private Button cancelbutton;
     private Button callnextpatient;
     private Button refresh;
     private ListView listView;
@@ -77,6 +78,7 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
         beginbutton = (Button) findViewById(R.id.beginQueue);
         endbutton = (Button) findViewById(R.id.endQueue);
+        cancelbutton=(Button)findViewById(R.id.btnCancelQueue);
         callnextpatient = (Button) findViewById(R.id.callNextPatient);
         listView =(ListView) findViewById(R.id.patientList);
         refresh = (Button) findViewById(R.id.btnRefresh);
@@ -185,6 +187,16 @@ public class Queue extends AppCompatActivity implements DBUtility {
                 insertAudit();
             }
         });
+
+        cancelbutton.setOnClickListener(new View.OnClickListener() {//
+            @Override
+            public void onClick(View v) {
+                CancelQueue canQueue=new CancelQueue();
+                canQueue.execute();
+
+            }
+        });
+
         refresh.setOnClickListener(new View.OnClickListener() {//
             @Override
             public void onClick(View v) {
@@ -448,6 +460,87 @@ public class Queue extends AppCompatActivity implements DBUtility {
 
         }
     }
+
+
+    private class CancelQueue extends AsyncTask<String, String, String> {
+
+        String z = "";
+        boolean isSuccess = false;
+
+
+        @Override
+        protected void onPreExecute() {
+
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                URL url = new URL("https://isproj2a.benilde.edu.ph/Sympl/CancelQueueServlet");
+                URLConnection connection = url.openConnection();
+
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("queueid", qs.getqueueid());
+                String query = builder.build().getEncodedQuery();
+
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String returnString="";
+                ArrayList<String> output=new ArrayList<String>();
+                while ((returnString = in.readLine()) != null)
+                {
+                    z = "Queue Cancelled";
+                    isSuccess=true;
+                    Log.d("returnString", returnString);
+                    output.add(returnString);
+                }
+                in.close();
+            } catch (Exception ex) {
+                isSuccess = false;
+                z = "Exceptions" + ex;
+            }
+            return z;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (z.equals("")) {
+
+            } else {
+                Toast.makeText(getBaseContext(), "" + z, Toast.LENGTH_LONG).show();
+            }
+
+            progressDialog.dismiss();
+            if (isSuccess) {
+
+
+                Intent intent = new Intent(Queue.this,GenerateReport.class);
+                intent.putExtra("queueid", qs.getqueueid());
+                startActivity(intent);
+            }
+
+
+        }
+    }
+
+
+
 
     private class MarkCalled extends AsyncTask<String,String,String> {
         boolean isSuccess;

@@ -19,7 +19,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/patientsinqueue" />
+            app:srcCompat="@drawable/ic_queue_cancel" />
 
         <TextView
             android:id="@+id/queueName"
@@ -43,10 +43,10 @@
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintHorizontal_bias="0.511"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.136" />
+            app:layout_constraintVertical_bias="0.158" />
 
         <Button
             android:id="@+id/callNextPatient"
@@ -55,9 +55,10 @@
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.526"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.318" />
+            app:layout_constraintVertical_bias="0.448" />
 
         <Button
             android:id="@+id/endQueue"
@@ -66,15 +67,15 @@
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.537"
+            app:layout_constraintHorizontal_bias="0.388"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.226" />
+            app:layout_constraintVertical_bias="0.354" />
 
         <ListView
             android:id="@+id/patientList"
-            android:layout_width="330dp"
-            android:layout_height="365dp"
+            android:layout_width="320dp"
+            android:layout_height="226dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.507"
@@ -89,10 +90,22 @@
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="0.526"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.408" />
+            app:layout_constraintVertical_bias="0.554" />
+
+        <Button
+            android:id="@+id/btnCancelQueue"
+            android:layout_width="340dp"
+            android:layout_height="61dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.471"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.258" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
